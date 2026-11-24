@@ -52,16 +52,24 @@ def compute_backpointers(s0, s1):
         D[0][j] = j
         backptr[0][j] = (0,j-1)
     
+    # Fyller resten av tabellen rad för rad
     for i in range(1,n+1):
         for j in range(1,m+1):
-            diagonal = D[i-1][j-1] + subst_cost(s0([i-1]), s1[j-1])
+            diagonal = D[i-1][j-1] + subst_cost(s0[i-1], s1[j-1])
             upp = D[i-1][j] + 1
             vanster = D[i][j-1] + 1
 
+            # Billigaste alternativet blir det värde som cellen får
             D[i][j] = min(diagonal,upp,vanster)
 
-            backptr = D[i][j]
-    
+            # Sparar de bästa värdena
+            if D[i][j] == diagonal:
+                backptr[i][j] = (i - 1, j - 1)
+            elif D[i][j] == upp:
+                backptr[i][j] = (i - 1, j)  
+            else:
+                backptr[i][j] = (i, j - 1)
+    print(D[n][m])
     return backptr
 
 
@@ -94,8 +102,33 @@ def align(s0, s1, backptr):
     """
 
     r0,r1 = '',''
+    
+    # Börjar nere i högra hörnet
+    i, j = len(s0), len(s1)
 
-    # YOUR CODE HERE
+    # Följer pilarna uppåt tills vi är uppe i vänstra hörnet
+    while i > 0 or j > 0:
+      
+        # Cellen som pilen från i,j pekar mot
+        pi, pj = backptr[i][j]
+
+        if pi == i - 1 and pj == j - 1:     
+            # Diagonalt, tecknena paras ihop
+            r0 += s0[i-1]
+            r1 += s1[j-1]
+        elif pi == i - 1:   
+            # Uppåt, tecnket i s0 blir en lucka i s1               
+            r0 += s0[i-1]
+            r1 += ' '
+        else: 
+            # Vänster, lucka i s0 byts till tecknet i s1                             
+            r0 += ' '
+            r1 += s1[j-1]
+        # Flyttar till cellen pilen pekade på
+        i, j = pi, pj
+    # Eftersom vi bygger bakifrån så måste vi vända
+    r0, r1 = r0[::-1], r1[::-1]   
+    
 
     return (r0,r1)
 
