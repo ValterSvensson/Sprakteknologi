@@ -22,7 +22,7 @@ class BinaryLogisticRegression(object):
     MINIBATCH_SIZE = 1000 # Minibatch size (only for minibatch gradient descent)
     MINIBATCH_MAX_EPOCHS = 1000 # Maximal number of passes through the data in minibatch gradient descent.
 
-    PLOT = False           # Plot the loss during training? Set to False when the code works (plotting is slow).
+    PLOT = True           # Plot the loss during training? Set to False when the code works (plotting is slow).
     PLOT_EVERY = 10       # Plot every n:th iteration (batch/minibatch). Stochastic plots every 100*n:th step.
 
     # ----------------------------------------------------------------------
